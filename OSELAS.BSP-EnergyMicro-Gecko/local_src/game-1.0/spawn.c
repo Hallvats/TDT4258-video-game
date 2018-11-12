@@ -15,12 +15,12 @@ typedef int (*shape_array_t)[2];
 
 shape_array_t tetrominos[] = { i_piece, j_piece, l_piece, o_piece, s_piece, z_piece, t_piece };
 
-void spawn_piece(int by, int bx, int board[by][bx], int active_piece[4][2], int p) {
+void spawn_piece(int board[24][10], int active_piece[4][2], int p) {
   int i;
 	for(i = 0; i < 4; i++) {
 	    board[tetrominos[p][i][0]][3+tetrominos[p][i][1]] = 1;
 	}
-  memcpy(active_piece, tetrominos[p], sizeof (int) * by * bx);
+  memcpy(active_piece, tetrominos[p], sizeof (int) * 24 * 10);
   for(i = 0; i < 4; i++) {
     active_piece[i][1] += 3;
   }

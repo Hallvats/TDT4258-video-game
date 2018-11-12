@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "move.c"
+#include "spawn.c"
 
 
 int BOARD[24][10] = { 0 };
-int ACTIVE_PIECE[4][2] = { { 1, 4 }, { 2, 4 }, { 3, 4 }, { 3, 5 } };
+int ACTIVE_PIECE[4][2];
 int i;
 int j;
 char c;
@@ -14,13 +15,14 @@ void print_board();
 
 int main(int argc, char *argv[])
 {
+	spawn_piece(BOARD, ACTIVE_PIECE, 3);
 	print_board();
 	while(1) {
 		printf("Enter move, l/r/d: ");
 		scanf("%c", &input);
 		c = input;
 		if(c == 'l' || c =='r' || c == 'd') {
-			move(24, 10, BOARD, ACTIVE_PIECE, c);
+			move(BOARD, ACTIVE_PIECE, c);
 		}
 		print_board();
 	}
