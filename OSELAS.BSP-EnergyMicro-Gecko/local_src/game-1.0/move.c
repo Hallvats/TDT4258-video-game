@@ -25,7 +25,6 @@ int move_legal(int by, int bx, int board[by][bx], int active_piece[4][2], char d
 		if((active_piece[i][1] + horizontal < 0) || (active_piece[i][1] + horizontal > 9)) {
 			return 0;
 		}
-		printf("Move is %c\n", direction);
 		if(board[active_piece[i][0] + vertical][active_piece[i][1] + horizontal] == 1) {
 			is_active_piece = 0;
 			for(j = 0; j < 4; j++) {
@@ -52,7 +51,6 @@ void move(int by, int bx, int board[by][bx], int active_piece[4][2], char direct
 		vertical = 1;
 	}
 	if(move_legal(by, bx, board, active_piece, direction)) {
-		printf("Move was legal.\n");
 		for(i = 0; i < 4; i++) {
 			board[active_piece[i][0]][active_piece[i][1]] = 0;
 		}
