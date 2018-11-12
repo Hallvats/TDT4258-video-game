@@ -4,12 +4,12 @@
 
 
 int i_piece[4][2] = {{0,2},{1,2},{2,2},{3,2}};
-int j_piece[4][2] = {{0,2},{1,2},{2,2},{2,1}};
-int l_piece[4][2] = {{0,1},{1,1},{2,1},{2,2}};
-int o_piece[4][2] = {{0,1},{0,2},{1,1},{1,2}};
-int s_piece[4][2] = {{0,2},{0,3},{1,1},{1,2}};
-int z_piece[4][2] = {{0,1},{0,2},{1,2},{1,3}};
-int t_piece[4][2] = {{0,2},{1,1},{1,2},{1,3}};
+int j_piece[4][2] = {{1,2},{2,2},{3,2},{3,1}};
+int l_piece[4][2] = {{1,1},{2,1},{3,1},{3,2}};
+int o_piece[4][2] = {{2,1},{2,2},{3,1},{3,2}};
+int s_piece[4][2] = {{2,2},{2,3},{3,1},{3,2}};
+int z_piece[4][2] = {{2,1},{2,2},{3,2},{3,3}};
+int t_piece[4][2] = {{2,2},{3,1},{3,2},{3,3}};
 
 typedef int (*shape_array_t)[2];
 
@@ -21,4 +21,7 @@ void spawn_piece(int by, int bx, int board[by][bx], int active_piece[4][2], int 
 	    board[tetrominos[p][i][0]][3+tetrominos[p][i][1]] = 1;
 	}
   memcpy(active_piece, tetrominos[p], sizeof (int) * by * bx);
+  for(i = 0; i < 4; i++) {
+    active_piece[i][1] += 3;
+  }
 }
