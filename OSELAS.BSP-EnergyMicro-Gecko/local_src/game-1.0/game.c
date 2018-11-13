@@ -15,14 +15,16 @@ void print_board();
 
 int main(int argc, char *argv[])
 {
-	spawn_piece(BOARD, ACTIVE_PIECE, 3);
+	spawn_piece(BOARD, ACTIVE_PIECE, rand() % 7);
 	print_board();
 	while(1) {
 		printf("Enter move, l/r/d: ");
 		scanf("%c", &input);
 		c = input;
 		if(c == 'l' || c =='r' || c == 'd') {
-			move(BOARD, ACTIVE_PIECE, c);
+			if(move(BOARD, ACTIVE_PIECE, c) == 0) {
+				spawn_piece(BOARD, ACTIVE_PIECE, rand() % 7);
+			}
 		}
 		print_board();
 	}
