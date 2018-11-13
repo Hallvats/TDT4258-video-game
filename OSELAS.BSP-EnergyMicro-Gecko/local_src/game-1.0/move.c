@@ -8,7 +8,6 @@ int i;
 int j;
 int is_active_piece;
 
-//int move_legal(int by, int bx, int board[by][bx], int active_piece[4][2], char direction) {
 int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;
@@ -41,7 +40,7 @@ int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	return 1;
 }
 
-void move(int board[24][10], int active_piece[4][2], char direction) {
+int move(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;
 	if(direction == 'l') {
@@ -60,5 +59,11 @@ void move(int board[24][10], int active_piece[4][2], char direction) {
 			active_piece[i][0] = active_piece[i][0] + vertical;
 			active_piece[i][1] = active_piece[i][1] + horizontal;
 		}
+		return 1;
+	} else {
+		if(direction == 'd') {
+			return 0;
+		}
 	}
+	return 1;
 }
