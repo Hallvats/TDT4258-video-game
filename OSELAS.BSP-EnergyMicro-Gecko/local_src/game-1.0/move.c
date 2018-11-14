@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "lines.c"
 
 
 int horizontal = 0;
@@ -7,6 +8,7 @@ int vertical = 0;
 int i;
 int j;
 int is_active_piece;
+int last_active_lines[4] = { 0 };
 
 int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
@@ -62,6 +64,7 @@ int move(int board[24][10], int active_piece[4][2], char direction) {
 		return 1;
 	} else {
 		if(direction == 'd') {
+			check_lines(active_piece, board);
 			return 0;
 		}
 	}
