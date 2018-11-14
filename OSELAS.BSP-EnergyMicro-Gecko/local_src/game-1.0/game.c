@@ -13,6 +13,8 @@ char input;
 
 void print_board();
 
+int check_game_over();
+
 int main(int argc, char *argv[])
 {
 	spawn_piece(BOARD, ACTIVE_PIECE, rand() % 7);
@@ -23,12 +25,25 @@ int main(int argc, char *argv[])
 		c = input;
 		if(c == 'l' || c =='r' || c == 'd') {
 			if(move(BOARD, ACTIVE_PIECE, c) == 0) {
+				if(check_game_over() == 1) {
+					break;
+				}
 				spawn_piece(BOARD, ACTIVE_PIECE, rand() % 7);
 			}
 		}
 		print_board();
 	}
+	printf("GAME OVER!\n");
 	exit(EXIT_SUCCESS);
+}
+
+int check_game_over() {
+	for(i = 0; i < 4; i++) {
+		if(ACTIVE_PIECE[i][0] < 4) {
+			return 1;
+		}
+	}
+	return 0;
 }
 
 void print_board() {
