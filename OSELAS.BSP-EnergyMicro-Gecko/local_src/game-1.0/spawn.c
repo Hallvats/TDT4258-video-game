@@ -20,7 +20,7 @@ void spawn_piece(int board[24][10], int active_piece[4][2], int p) {
 	for(i = 0; i < 4; i++) {
 	    board[tetrominos[p][i][0]][3+tetrominos[p][i][1]] = 1;
 	}
-  memcpy(active_piece, tetrominos[p], sizeof (int) * 24 * 10);
+  memcpy(active_piece, tetrominos[p], sizeof (int) * 4 * 2);
   for(i = 0; i < 4; i++) {
     active_piece[i][1] += 3;
   }
