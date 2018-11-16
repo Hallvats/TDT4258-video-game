@@ -7,13 +7,13 @@ int i_piece[4][2] = {{0,2},{1,2},{2,2},{3,2}};
 int j_piece[4][2] = {{1,2},{2,2},{3,2},{3,1}};
 int l_piece[4][2] = {{1,1},{2,1},{3,1},{3,2}};
 int o_piece[4][2] = {{2,1},{2,2},{3,1},{3,2}};
-int s_piece[4][2] = {{2,2},{2,3},{3,1},{3,2}};
+int s_piece[4][2] = {{2,3},{2,2},{3,2},{3,1}};
 int z_piece[4][2] = {{2,1},{2,2},{3,2},{3,3}};
 int t_piece[4][2] = {{2,2},{3,1},{3,2},{3,3}};
 
-typedef int (*shape_array_t)[2];
+typedef int (*shape_array_pieces)[2];
 
-shape_array_t tetrominos[] = { i_piece, j_piece, l_piece, o_piece, s_piece, z_piece, t_piece };
+shape_array_pieces tetrominos[] = { i_piece, j_piece, l_piece, o_piece, s_piece, z_piece, t_piece };
 
 void spawn_piece(int board[24][10], int active_piece[4][2], int p) {
   int i;

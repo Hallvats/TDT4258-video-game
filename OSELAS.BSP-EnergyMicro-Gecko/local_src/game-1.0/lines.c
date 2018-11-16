@@ -21,7 +21,6 @@ void check_lines(int active_piece[4][2], int board[24][10]) {
       continue;
     } else {
       cleared_lines[i] = active_piece[i][0];
-      printf("%d\n", cleared_lines[i]);
       for(j = 0; j < 10; j++) {
         board[active_piece[i][0]][j] = 0;
       }

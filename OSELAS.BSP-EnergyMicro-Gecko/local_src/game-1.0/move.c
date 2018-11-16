@@ -13,11 +13,11 @@ int last_active_lines[4] = { 0 };
 int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;
-	if(direction == 'l') {
+	if(direction == 'a') {
 		horizontal = -1;
-	} else if(direction == 'r') {
-		horizontal = 1;
 	} else if(direction == 'd') {
+		horizontal = 1;
+	} else if(direction == 's') {
 		vertical = 1;
 	}
 	for(i = 0; i < 4; i++) {
@@ -45,11 +45,11 @@ int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 int move(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;
-	if(direction == 'l') {
+	if(direction == 'a') {
 		horizontal = -1;
-	} else if(direction == 'r') {
-		horizontal = 1;
 	} else if(direction == 'd') {
+		horizontal = 1;
+	} else if(direction == 's') {
 		vertical = 1;
 	}
 	if(move_legal(board, active_piece, direction)) {
@@ -63,7 +63,7 @@ int move(int board[24][10], int active_piece[4][2], char direction) {
 		}
 		return 1;
 	} else {
-		if(direction == 'd') {
+		if(direction == 's') {
 			check_lines(active_piece, board);
 			return 0;
 		}
