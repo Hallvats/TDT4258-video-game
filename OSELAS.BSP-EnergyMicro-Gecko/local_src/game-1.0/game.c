@@ -57,6 +57,9 @@ int check_game_over() {
 
 void print_board() {
 	printf("\n");
+	for(i = 0; i < 4; i++) {
+		BOARD[ACTIVE_PIECE[i][0]][ACTIVE_PIECE[i][1]] = 1;
+	}
 	for(i = 0; i < 24; i++){
 		for(j = 0; j < 10; j++) {
 			printf("%d ", BOARD[i][j]);
