@@ -3,7 +3,7 @@
 #include "move.c"
 #include "spawn.c"
 #include "flip.c"
-
+#include "gamepad.c"
 
 int BOARD[24][10] = { 0 };
 int ACTIVE_PIECE[4][2];
@@ -25,9 +25,7 @@ int main(int argc, char *argv[])
 	spawn_piece(BOARD, ACTIVE_PIECE, ACTIVE_PIECE_N);
 	print_board();
 	while(1) {
-		printf("Enter move, w/a/s/d: ");
-		scanf("%c", &input);
-		c = input;
+		c = *inputTracker;
 		if(c == 'a' || c =='s' || c == 'd') {
 			if(move(BOARD, ACTIVE_PIECE, c) == 0) {
 				if(check_game_over() == 1) {
@@ -41,6 +39,8 @@ int main(int argc, char *argv[])
 			flip(ACTIVE_PIECE, BOARD, ACTIVE_PIECE_N);
 		}
 		print_board();
+		c = '_'; //Clear input TODO: Sjekk om dette er riktig pointer-bruk
+		inputTracker = '_';
 	}
 	printf("GAME OVER!\n");
 	exit(EXIT_SUCCESS);
