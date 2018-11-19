@@ -43,6 +43,10 @@
 #define GPIO_IEN       ((volatile uint32_t*)(GPIO_PA_BASE + 0x110))
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
 
+#define GPIO_PC_LENGTH ((volatile uint32_t*)(GPIO_PC_DOUT - GPIO_PC_BASE))
+#define GPIO_INTERRUPT ((volatile uint32_t*) GPIO_EXTIPSELL)
+#define GPIO_INTERRUPT_LENGTH ((volatile uint32_t*)(GPIO_IFC - GPIO_EXTIPSELL))
+
 // CMU
 
 #define CMU_BASE2 0x400c8000
