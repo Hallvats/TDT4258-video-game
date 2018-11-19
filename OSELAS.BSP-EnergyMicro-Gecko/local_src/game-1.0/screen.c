@@ -1,4 +1,15 @@
+#include <linux/fb.h>
+
+
 int init_screen(){
+
+	//TODO Side 55 i "Compendium"
+
+	//TODO: Usikker på om 0 er riktig startverdi
+	rect.dx = 0;
+	rect.dy = 0;
+	rect.width = 0;
+	rect.height = 0;
 
 	frameBuffer = open("/dev/fb0", 0_RDWR);
 	if(!frameBuffer){
