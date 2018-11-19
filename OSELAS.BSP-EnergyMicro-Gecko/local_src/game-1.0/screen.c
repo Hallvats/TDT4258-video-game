@@ -25,6 +25,25 @@ int init_screen(){
 	return 0;
 }
 
+void update_screen(){
+	/*
+	 * 320 pixler per linje
+	 * x0 = 110
+	 * y0 = 20
+	 *
+	 * Move:
+	 * Finne kordinat på brikke
+	 * update 7x7 matrise
+	 *
+	 * clear_lines:
+	 * update hele brettet
+	 * x = [110, 210], y = [20, 220]
+	 *
+	 * */
+
+
+}
+
 int clean_screen(){
 	munmap(fbp, screensize_bytes);
 	close(frameBuffer);
