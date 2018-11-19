@@ -70,7 +70,7 @@ GPIO_ODD_IRQ = 18;
  * Name of device class
  * Each device is represented with a structure of type cdev
  * Device number
- * Fasync structure
+ * Dynamic data structure to keep track of the different asynchronous readers
  */
 
 struct class ∗cl;
@@ -389,6 +389,7 @@ static irqreturn_t gp_interrupt_handler(int irq, void *dev_id, struct pt_regs *r
 	uint32_t clear_value = ioread32(GPIO_IF);
 	iowrite32(clear_value, GPIO_IFC);
 	
+	/* When data arrives, the following statement must be executed to signal asynchronous readers */
 	if (async_queue) {
 		gamepad_kill_fasync(&async_queue);
 	}
