@@ -11,13 +11,13 @@ int init_screen(){
 	rect.width = 0;
 	rect.height = 0;
 
-	frameBuffer = open("/dev/fb0", 0_RDWR);
+	frameBuffer = open("/dev/fb0", 0_RDWR); //fbfd
 	if(!frameBuffer){
 		printf("FrameBuffer was not opened correctly");
 		return EXIT_FAILURE;
 	}
 
-	screen = mmap(0, WIDTH * HEIGHT * 2, PROT_READ | PROT_WRITE, MAP_SHARED, frameBuffer, 0);
+	screenBuffer = (unsigned short*) mmap(0, WIDTH * HEIGHT * 2, PROT_READ | PROT_WRITE, MAP_SHARED, frameBuffer, 0);
 	if (screen == MAP_FAILED){
 		return EXIT_FAILURE;
 	}
@@ -25,7 +25,7 @@ int init_screen(){
 	return 0;
 }
 
-void update_screen(){
+void update_screen(int board[24][10]){
 	/*
 	 * 320 pixler per linje
 	 * x0 = 110
@@ -40,11 +40,32 @@ void update_screen(){
 	 * x = [110, 210], y = [20, 220]
 	 *
 	 * */
+	 int i;
+	 int j;
+	 int y;
+	 int x;
 
+	 for(i = 0; i < 320*240; i++) {
+		 screenBuffer[i] = 0x0;
+	 }
+	 for(i = 0; i < 24; i++) {
+		 for(j = 0; j < 10; j++) {
+			 if(board[i][j] == 1) {
+				 for(y = i * 10 + 20; y < i * 10 + 20 + 10; y++) {
+					 for(x = j * 10 + 110; x < j * 10 + 110 + 10; y++) {
+						 screenBuffer[y * 320 + x] = 0xF;
+					 }
+				 }
+			 }
+		 }
+	 }
+	 rect.dx = 240;
+	 rect.dy = 320;
 
+	 ioctl(screenBuffer, 0x4680, &rect);
 }
 
 int clean_screen(){
-	munmap(fbp, screensize_bytes);
+	munmap(screenBuffer, sizeof(screenBuffer)); //fbp -> screen
 	close(frameBuffer);
 }
