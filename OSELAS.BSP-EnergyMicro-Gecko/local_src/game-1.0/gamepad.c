@@ -5,6 +5,8 @@
 
 /* User programs have to execute two steps to enable asynchronous notification from an input file. First, they specify a process as the “owner” of the file. When a process invokes the F_SETOWN command using the fcntl system call, the process ID of the owner process is saved in filp->f_owner for later use. This step is necessary for the kernel to know just whom to notify. In order to actually enable asynchronous notifi- cation, the user programs must set the FASYNC flag in the device by means of the F_SETFL fcntl command.*/
 
+char inputTracker = -1;
+
 FILE* gamepad;
 
 int init_gamepad()
@@ -91,8 +93,17 @@ void signal_handler()
 	 */
 	
 	int input = fgetc(gamepad); // 8 bits?
+	//TODO: Add if-conditions
+	if(/* Left */){
+		inputTracker = 'a';
+	} else if (/* UP */){
+		inputTracker = 'w';
+	} else if (/* Right */){
+		inputTracker = 'd';
+	} else if (/* DOWN */){
+		inputTracker = 's';
+	}
 	
-	/* Use input */ 
 	
-	
+
 }
