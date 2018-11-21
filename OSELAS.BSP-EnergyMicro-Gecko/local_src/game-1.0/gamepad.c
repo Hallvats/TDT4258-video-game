@@ -14,7 +14,7 @@ int init_gamepad()
 	/* Get input file, the gamepad driver */
 	gamepad = fopen("/dev/gamepad", "r");
 	if (!gamepad) {
-		printf("Could not open device.")
+		printf("Could not open device.");
 		return EXIT_FAILURE;
 	}
 	
@@ -52,10 +52,10 @@ int init_gamepad()
 	 */
 	
 	oflags = fcntl(gamepad_no, F_GETFL);
-	retval = fcntl(gamepad_no, F_SETFL, oflags | FASYNC)
+	retval = fcntl(gamepad_no, F_SETFL, oflags | FASYNC);
 	
 	if (retval < 0) {
-		printf("Could not set FASYNC flag.")
+		printf("Could not set FASYNC flag.");
 		return EXIT_FAILURE;
 	}
 	
@@ -92,15 +92,16 @@ void signal_handler()
 	
 	int input = fgetc(gamepad); // 8 bits?
 	//TODO: Add if-conditions
-	if(/* Left */){
+	/*
+	if(){
 		inputTracker = 'a';
-	} else if (/* UP */){
+	} else if (){
 		inputTracker = 'w';
-	} else if (/* Right */){
+	} else if (){
 		inputTracker = 'd';
-	} else if (/* DOWN */){
+	} else if (){
 		inputTracker = 's';
-	}
+	}*/
 	
 	
 

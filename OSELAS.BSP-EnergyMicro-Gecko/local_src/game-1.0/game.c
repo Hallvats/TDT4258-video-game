@@ -4,7 +4,6 @@
 #include "spawn.c"
 #include "flip.c"
 #include "gamepad.c"
-#include "screen.c"
 
 int BOARD[24][10] = { 0 };
 int ACTIVE_PIECE[4][2];
@@ -21,16 +20,12 @@ int check_game_over();
 
 int main(int argc, char *argv[])
 {
-	init_screen();
-
-
 	srand((unsigned) time(&t));
 	ACTIVE_PIECE_N = rand() % 7;
 	spawn_piece(BOARD, ACTIVE_PIECE, ACTIVE_PIECE_N);
-	/*
 	print_board();
 	while(1) {
-		c = *inputTracker;
+		c = &inputTracker;
 		if(c == 'a' || c =='s' || c == 'd') {
 			if(move(BOARD, ACTIVE_PIECE, c) == 0) {
 				if(check_game_over() == 1) {
@@ -44,14 +39,10 @@ int main(int argc, char *argv[])
 			flip(ACTIVE_PIECE, BOARD, ACTIVE_PIECE_N);
 		}
 		print_board();
-		*/
-		while(1) {
-			update_screen(BOARD);	
-		}
 		c = '_'; //Clear input TODO: Sjekk om dette er riktig pointer-bruk
 		inputTracker = '_';
 	}
-	//printf("GAME OVER!\n");
+	printf("GAME OVER!\n");
 	exit(EXIT_SUCCESS);
 }
 
