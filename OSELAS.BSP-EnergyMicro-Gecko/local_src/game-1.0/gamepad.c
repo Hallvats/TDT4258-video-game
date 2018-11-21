@@ -75,6 +75,8 @@ int init_gamepad()
 		return EXIT_FAILURE;
 	}
 	
+	return EXIT_SUCCESS;
+	
 }
 
 void close_gamepad()

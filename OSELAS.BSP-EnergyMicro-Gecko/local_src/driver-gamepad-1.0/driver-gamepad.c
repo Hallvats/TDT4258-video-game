@@ -105,7 +105,7 @@ struct file_operations gamepad_fops = {
 
 static int __init gamepad_init(void)
 {
-	platform_driver_register(&my_driver)
+	platform_driver_register(&my_driver);
 	return 0;
 }
 
@@ -172,12 +172,12 @@ device_create(cl, NULL, gamepad_num, NULL, DEV_NAME);
 
 mem_available_err = request_mem_region(GPIO_PC_BASE, GPIO_PC_LENGTH, DEV_NAME);
 if (mem_available_err == NULL) {
-	print(KERN_INFO, "Memory region not available")
+	print(KERN_INFO, "Memory region not available");
 }
 
 mem_interrupt_available_err = request_mem_region(GPIO_INTERRUPT, GPIO_INTERRUPT_LENGTH, DEV_NAME);
 if (mem_interrupt_available_err == NULL) {
-	print(KERN_INFO, "Memory region not available")
+	print(KERN_INFO, "Memory region not available");
 }
 
 /*
@@ -187,7 +187,7 @@ if (mem_interrupt_available_err == NULL) {
  * TODO: handle error
  */
 
-ioremap_nocache(GPIO_PC_BASE, GPIO_PC_LENGTH)
+ioremap_nocache(GPIO_PC_BASE, GPIO_PC_LENGTH);
 ioremap_nocache(GPIO_INTERRUPT_BASE, GPIO_INTERRUPT_LENGTH);
 
 /*
@@ -252,7 +252,7 @@ cdev_add_err = cdev_add(&gamepad_cdev, gamepad_num, 1);
 
 if cdev_add_err
 {
-	print(KERN_NOTICE, "Error %d adding device%d", err, count)
+	print(KERN_NOTICE, "Error %d adding device%d", err, count);
 }
 
 }
@@ -299,7 +299,7 @@ class_destroy(cl);
 
 static void __exit gamepad_cleanup(void)
 {
-	platform_driver_unregister(&my_driver)
+	platform_driver_unregister(&my_driver);
 }
 
 /*
@@ -313,9 +313,9 @@ static void __exit gamepad_cleanup(void)
  
 int gamepad_open(struct inode *inode, struct file *filp)
 {
-	print(KERN_NOTICE, "What should this method do?")
+	print(KERN_NOTICE, "What should this method do?");
 	
-	return 0 //success!
+	return 0; //success!
 }
 
 /*
@@ -326,9 +326,9 @@ int gamepad_open(struct inode *inode, struct file *filp)
 
 int gamepad_release(struct inoded *inode, struct file *flip)
 {
-	print(KERN_NOTICE, "What should this method do?")
+	print(KERN_NOTICE, "What should this method do?");
 	
-	return 0 //success!
+	return 0; //success!
 }
 
 /*
@@ -354,7 +354,7 @@ static ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *
 	 */
 	
 	//unsigned long copy_to_user(void __user *to, const void *from, unsigned long count);
-	copy_to_user(buff, &reading, 1)
+	copy_to_user(buff, &reading, 1);
 	
 	// return the amount of memory still to be copied p. 23 chapter 3
 	
@@ -383,7 +383,7 @@ static int gamepad_kill_fasync(struct fasync_struct **fa)
 static irqreturn_t gp_interrupt_handler(int irq, void *dev_id, struct pt_regs *regs)
 {
 	/* Find source of interrupt by reading the GPIO_IF register (DONT KNOW ITF NEEDED) */
-	ioread32(GPIO_IF)
+	ioread32(GPIO_IF);
 	
 	/* Clear interrupt flags */
 	uint32_t clear_value = ioread32(GPIO_IF);
@@ -394,7 +394,7 @@ static irqreturn_t gp_interrupt_handler(int irq, void *dev_id, struct pt_regs *r
 		gamepad_kill_fasync(&async_queue);
 	}
 	
-	return IRQ_HANDELED
+	return IRQ_HANDELED;
 }
 
 /* Let the kernel know which functions are init and exit */
