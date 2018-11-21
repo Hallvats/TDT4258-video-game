@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+/*
+   Array containing coordinates for each piece type in its init state
+   relative to a 4x4 system
+*/
 int i_piece[4][2] = {{0,2},{1,2},{2,2},{3,2}};
 int j_piece[4][2] = {{1,2},{2,2},{3,2},{3,1}};
 int l_piece[4][2] = {{1,1},{2,1},{3,1},{3,2}};
@@ -15,6 +18,7 @@ typedef int (*shape_array_pieces)[2];
 
 shape_array_pieces tetrominos[] = { i_piece, j_piece, l_piece, o_piece, s_piece, z_piece, t_piece };
 
+/* Sets active piece given piece type */
 void spawn_piece(int board[24][10], int active_piece[4][2], int p) {
   int i;
 	for(i = 0; i < 4; i++) {
