@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <linux/types.h>
 
 // GPIO
 
@@ -42,10 +42,11 @@
 #define GPIO_EXTIFALL  ((volatile uint32_t*)(GPIO_PA_BASE + 0x10c))
 #define GPIO_IEN       ((volatile uint32_t*)(GPIO_PA_BASE + 0x110))
 #define GPIO_IFC       ((volatile uint32_t*)(GPIO_PA_BASE + 0x11c))
+#define GPIO_IF        ((volatile uint32_t*)(GPIO_PA_BASE + 0x114))
 
-#define GPIO_PC_LENGTH ((volatile uint32_t*)(GPIO_PC_DOUT - GPIO_PC_BASE))
+#define GPIO_PC_LENGTH ((resource_size_t) 36)
 #define GPIO_INTERRUPT ((volatile uint32_t*) GPIO_EXTIPSELL)
-#define GPIO_INTERRUPT_LENGTH ((volatile uint32_t*)(GPIO_IFC - GPIO_EXTIPSELL))
+#define GPIO_INTERRUPT_LENGTH ((resource_size_t) 28)
 
 // CMU
 
