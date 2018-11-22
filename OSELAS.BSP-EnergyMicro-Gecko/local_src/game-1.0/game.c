@@ -31,8 +31,8 @@
 #define SW7 (1<<6)
 #define SW8 (1<<7)
 
-#define WIDHT 320
-#define HIGHT 240
+#define WIDTH 320
+#define HEIGHT 240
 
 FILE* gamepad;
 FILE* frame;
@@ -45,6 +45,7 @@ int j;
 char c;
 char input;
 time_t t;
+struct fb_copyarea rect;
 
 /* Prototypes */
 void print_board();
@@ -55,6 +56,9 @@ int init_screen();
 void update_screen();
 void clean_screen();
 void signal_handler();
+int fcntl(int fd, int cmd, ...);
+int open(const char *path, int oflag, ... );
+int ioctl(uint16_t fd, unsigned long request, ...);
 
 char inputTracker = '_';
 uint16_t *screenBuffer;
