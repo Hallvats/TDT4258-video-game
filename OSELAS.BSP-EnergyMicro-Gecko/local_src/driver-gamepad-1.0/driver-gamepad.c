@@ -54,7 +54,7 @@ static irqreturn_t gp_interrupt_handler(int irq, void *dev_id, struct pt_regs *r
 
 /* Module variables */
 static struct class *gamepad_cl;
-static struct cdev *gamepad_cdev;
+static struct cdev gamepad_cdev;
 static dev_t gamepad_num;
 static struct fasync_struct *gamepad_async_queue;
 struct resource *res;
@@ -135,7 +135,7 @@ static int gamepad_probe(struct platform_device *dev)
 	 */
 
 	 // void cdev_init(struct cdev *cdev, struct file_operations *fops);
-	 cdev_init(gamepad_cdev, &gamepad_fops);
+	 cdev_init(&gamepad_cdev, &gamepad_fops);
 
 	/* Set the struct cdev owner field to THIS_MODULE */
 
@@ -145,7 +145,7 @@ static int gamepad_probe(struct platform_device *dev)
 	/* Tell the kernel about the cdev structure */
 
 	// cdev_add_err = cdev_add(struct cdev *dev, dev_t num, unsigned int count);
-	if ((retval = cdev_add(gamepad_cdev, gamepad_num, 1)) < 0) {
+	if ((retval = cdev_add(&gamepad_cdev, gamepad_num, 1)) < 0) {
 		printk(KERN_INFO "Error %d: Failed to add cdev.", retval);
 		return retval;
 	}
@@ -268,7 +268,7 @@ static int gamepad_remove(struct platform_device *dev)
 	/* Remove device from the system */
 
 	// void cdev_del(struct cdev *dev);
-	cdev_del(gamepad_cdev);
+	cdev_del(&gamepad_cdev);
 
 	device_destroy(gamepad_cl, gamepad_num);
 	class_destroy(gamepad_cl);
