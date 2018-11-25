@@ -124,7 +124,6 @@ static int gamepad_probe(struct platform_device *dev)
 	/* Dynamically allocate device numbers */
 
 	// int alloc_chrdev_region(dev_t *dev, unsigned int firstminor, unsigned int count, char *name); Returns negative number if unsuccessful.
-
 	if ((retval = alloc_chrdev_region(&gamepad_num, DEV_FIRSTMINOR, DEV_NUM_COUNT, DEV_NAME)) < 0) {
 		printk(KERN_INFO "Error %d: Failed to allocate char device region.", retval);
 	}
@@ -140,8 +139,16 @@ static int gamepad_probe(struct platform_device *dev)
 
 	/* Set the struct cdev owner field to THIS_MODULE */
 
-	/*gamepad_cdev.owner = THIS_MODULE;
-	gamepad_cdev.ops = &gamepad_fops;*/
+	gamepad_cdev.owner = THIS_MODULE;
+	gamepad_cdev.ops = &gamepad_fops;
+	
+	/* Tell the kernel about the cdev structure */
+
+	// cdev_add_err = cdev_add(struct cdev *dev, dev_t num, unsigned int count);
+	if ((retval = cdev_add(gamepad_cdev, gamepad_num, 1)) < 0) {
+		printk(KERN_INFO "Error %d: Failed to add cdev.", retval);
+		return retval;
+	}
 
 	/* Make the device visible to user space to allow the user program to communicate with the driver */
 
@@ -217,13 +224,6 @@ static int gamepad_probe(struct platform_device *dev)
 	/* Clear interrupt flags */
 	clear_value = ioread32(gpio_start + GPIO_IF);
 	iowrite32(clear_value, gpio_start + GPIO_IFC);
-
-	/* Tell the kernel about the cdev structure */
-
-	// cdev_add_err = cdev_add(struct cdev *dev, dev_t num, unsigned int count);
-	if ((retval = cdev_add(gamepad_cdev, gamepad_num, 1)) < 0) {
-		printk(KERN_INFO "Error %d: Failed to add cdev.", retval);
-	}
 
 	return 0;
 
@@ -310,7 +310,7 @@ static int gamepad_release(struct inode *inode, struct file *flip)
  * The task of the read method is to copy data from the device to user space (using copy_to_user)
  */
 
-static ssize_t read(struct file *filp, char __user *buff, size_t count, loff_t *offp)
+static ssize_t gamepad_read(struct file *filp, char __user *buff, size_t count, loff_t *offp)
 {
 	unsigned long reading;
 		

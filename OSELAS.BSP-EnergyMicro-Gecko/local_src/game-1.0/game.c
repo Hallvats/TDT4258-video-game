@@ -5,12 +5,13 @@
 #include <linux/fb.h>
 #include <linux/fs.h>
 #include <linux/ioctl.h>
+#include <sys/ioctl.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
 #include <signal.h> //sigaction()
 #include <string.h>
-#include <asm/fcntl.h>
+#include <fcntl.h>
 
 #include <time.h>
 #include <sys/time.h>
@@ -35,7 +36,7 @@
 #define HEIGHT 240
 
 FILE* gamepad;
-FILE* frame;
+int frame;
 
 int BOARD[24][10] = { 0 };
 int ACTIVE_PIECE[4][2];
@@ -56,12 +57,12 @@ int init_screen();
 void update_screen();
 void clean_screen();
 void signal_handler();
-int fcntl(int fd, int cmd, ...);
+//int fcntl(int fd, int cmd, ...);
 int open(const char *path, int oflag, ... );
-int ioctl(uint16_t fd, unsigned long request, ...);
+//int ioctl(uint16_t fd, unsigned long request, ...);
 
 char inputTracker = '_';
-uint16_t *screenBuffer;
+uint16_t* screenBuffer;
 
 int main(int argc, char *argv[])
 {	init_gamepad();
@@ -123,7 +124,7 @@ void print_board() {
 int init_gamepad()
 {
 	int oflags, retval, gamepad_no;
-	struct sigaction action;
+	struct sigaction sa;
 	
 	/* Get input file, the gamepad driver */
 	gamepad = fopen("/dev/gamepad", O_RDONLY);
@@ -183,10 +184,10 @@ int init_gamepad()
 	 *
 	 * Returns 0 on success and -1 on error.
 	 */
-	memset(&action, 0, sizeof(action));
-	action.sa_handler = signal_handler;
-	action.sa_flags = 0;
-	retval = sigaction(SIGIO, &signal_handler, NULL);
+	memset(&sa, 0, sizeof(sa));
+	sa.sa_handler = signal_handler; // Which function should run on signal?
+	sa.sa_flags = 0;
+	retval = sigaction(SIGIO, &sa, NULL); // Interrupt on reciving SIGIO signal
 	if (retval < 0) {
 		printf("Could not register signal handler.");
 		return EXIT_FAILURE;
@@ -222,8 +223,6 @@ void signal_handler()
 }
 
 int init_screen(){
-
-	//TODO Side 55 i "Compendium"
 
 	rect.dx = 0;
 	rect.dy = 0;
@@ -281,10 +280,10 @@ void update_screen(){
 	 rect.dx = 240;
 	 rect.dy = 320;
 
-	 ioctl(screenBuffer, 0x4680, &rect);
+	 ioctl(frame, 0x4680, &rect);
 }
 
 void clean_screen(){
 	munmap(screenBuffer, sizeof(screenBuffer)); //fbp -> screen
-	fclose(frame);
+	close(frame);
 }
