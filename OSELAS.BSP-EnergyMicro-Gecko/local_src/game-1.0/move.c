@@ -10,9 +10,11 @@ int j;
 int is_active_piece;
 int last_active_lines[4] = { 0 };
 
+/* Checks if a move given a direction is legal */
 int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;
+	/* Set horizonal or vertical direction of movement */
 	if(direction == 'a') {
 		horizontal = -1;
 	} else if(direction == 'd') {
@@ -21,6 +23,7 @@ int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 		vertical = 1;
 	}
 	for(i = 0; i < 4; i++) {
+		/* Check for wall collision */
 		if((active_piece[i][0] + vertical < 0) || (active_piece[i][0] + vertical > 23)) {
 			return 0;
 		}
@@ -31,7 +34,7 @@ int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 			is_active_piece = 0;
 			for(j = 0; j < 4; j++) {
 				if((active_piece[i][0] + vertical == active_piece[j][0]) && (active_piece[i][1] + horizontal == active_piece[j][1])) {
-					is_active_piece = 1;
+					is_active_piece = 1; // Set to 1 if "colliding" piece is part of active piece
 				}
 			}
 			if(!is_active_piece) {
@@ -42,6 +45,10 @@ int move_legal(int board[24][10], int active_piece[4][2], char direction) {
 	return 1;
 }
 
+/*
+ 	 Mostly same implementation as above, with addition of changing active_piece values
+	 and checking lines for removal if an illegal down movement is detected, i.e. it hits the bottom
+*/
 int move(int board[24][10], int active_piece[4][2], char direction) {
 	horizontal = 0;
 	vertical = 0;

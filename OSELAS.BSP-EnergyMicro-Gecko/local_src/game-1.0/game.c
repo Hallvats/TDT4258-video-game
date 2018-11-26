@@ -9,7 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
-#include <signal.h> //sigaction()
+#include <signal.h>
 #include <string.h>
 #include <fcntl.h>
 
@@ -20,9 +20,7 @@
 #include "spawn.c"
 #include "flip.c"
 
-/*
- * Bitmap for gamepad input
- */
+/* Bitmap for gamepad input */
 #define SW1 (1<<0)
 #define SW2 (1<<1)
 #define SW3 (1<<2)
@@ -53,13 +51,11 @@ void print_board();
 int check_game_over();
 int init_gamepad();
 void close_gamepad();
-int init_screen();
+void init_screen();
 void update_screen();
 void clean_screen();
 void signal_handler();
-//int fcntl(int fd, int cmd, ...);
 int open(const char *path, int oflag, ... );
-//int ioctl(uint16_t fd, unsigned long request, ...);
 
 char inputTracker = '_';
 uint16_t* screenBuffer;
@@ -222,7 +218,7 @@ void signal_handler()
 	
 }
 
-int init_screen(){
+void init_screen(){
 
 	rect.dx = 0;
 	rect.dy = 0;
@@ -239,8 +235,6 @@ int init_screen(){
 	if (screenBuffer == MAP_FAILED){
 		return EXIT_FAILURE;
 	}
-
-	return 0;
 }
 
 void update_screen(){
