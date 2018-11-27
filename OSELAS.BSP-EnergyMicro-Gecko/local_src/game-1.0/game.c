@@ -46,7 +46,7 @@ int j;
 char c;
 char input;
 time_t t;
-struct fb_copyarea rect;
+struct fb_copyarea area;
 
 /* Prototypes */
 void print_board();
@@ -57,21 +57,33 @@ int init_screen();
 void update_screen();
 void clean_screen();
 void signal_handler();
-//int fcntl(int fd, int cmd, ...);
 int open(const char *path, int oflag, ... );
-//int ioctl(uint16_t fd, unsigned long request, ...);
-
+void update_pixels(int x, int y, int val);
+int ns;
 char inputTracker = '_';
-uint16_t* screenBuffer;
+unsigned short* screenBuffer;
 
 int main(int argc, char *argv[])
 {	init_gamepad();
 	init_screen();
+	printf("initeded");
 	srand((unsigned) time(&t));
+	printf("sranded");
 	ACTIVE_PIECE_N = rand() % 7;
+	printf("actived_pice\n");
 	spawn_piece(BOARD, ACTIVE_PIECE, ACTIVE_PIECE_N);
+	printf("spawned oices\n");
 	print_board();
+	printf("board_printeded\n");
+	struct timespec tim, tim2, tim3;
 	while(1) {
+        tim.tv_sec = 1;
+        tim.tv_nsec = 500000000L;;
+        tim2.tv_sec = 1;
+        tim2.tv_nsec = 1;
+        tim3.tv_sec = 0;
+        tim3.tv_nsec = 1;
+        ns = nanosleep(&tim, &tim2);
 		c = inputTracker;
 		if(c == 'a' || c =='s' || c == 'd') {
 			if(move(BOARD, ACTIVE_PIECE, c) == 0) {
@@ -86,8 +98,8 @@ int main(int argc, char *argv[])
 			flip(ACTIVE_PIECE, BOARD, ACTIVE_PIECE_N);
 		}
 		update_screen();
-		c = '_'; //Clear input TODO: Sjekk om dette er riktig pointer-bruk
-		inputTracker = '_';
+		c = '_'; //Clear input
+		inputTracker = 's';
 	}
 	printf("GAME OVER!\n");
 	close_gamepad();
@@ -127,14 +139,14 @@ int init_gamepad()
 	struct sigaction sa;
 	
 	/* Get input file, the gamepad driver */
-	gamepad = fopen("/dev/gamepad", O_RDONLY);
+	gamepad = open("/dev/gamepad", O_RDWR);
 	if (!gamepad) {
 		printf("Could not open device.");
 		return EXIT_FAILURE;
 	}
 	
 	/* fileno() returns the file descriptor number associated with a specified z/OS® XL C/C++ I/O stream, STDIN_FILENO */
-	gamepad_no = fileno(gamepad);
+	gamepad_no = gamepad;
 	
 	/* Setup asynchronous notification, p.35, chapter 6 */
 	
@@ -204,86 +216,76 @@ void close_gamepad()
 
 void signal_handler()
 {
-	/* Get input from file
-	 * int fgetc(FILE *stream)
-	 */
-	
-	int input = ~(fgetc(gamepad));
-	
-	if(input & SW1){
+	/* Get input from file */
+	char buf[100];
+	int input = read(gamepad, buf , sizeof buf);
+	if(buf[0] == 254){
 		inputTracker = 'a';
-	} else if (input & SW2){
+	} else if (buf[0] == 253){
 		inputTracker = 'w';
-	} else if (input & SW3){
+	} else if (buf[0] == 251){
 		inputTracker = 'd';
-	} else if (input & SW4){
+	} else if (buf[0] == 247){
 		inputTracker = 's';
 	}
 	
 }
 
 int init_screen(){
-
-	rect.dx = 0;
-	rect.dy = 0;
-	rect.width = 0;
-	rect.height = 0;
-
-	frame = open("/dev/fb0", O_RDWR); //fbfd
-	if(!frame){
-		printf("Frame was not opened correctly");
-		return EXIT_FAILURE;
+	frame = open("/dev/fb0", 2);
+	screenBuffer = (unsigned short*) mmap(NULL, 2*320*240, PROT_WRITE | PROT_READ, MAP_SHARED, frame, 0);
+	
+	area.width = 1;
+	area.height = 1;
+	int k;
+	int h;
+	for(h = 0; h < 24; h++) {
+		for(k = 0; k < 32; k++) {
+			update_pixels(k-11, h, 0x0990);
+			}
 	}
-
-	screenBuffer = (uint16_t *) mmap(0, WIDTH * HEIGHT * 2, PROT_READ | PROT_WRITE, MAP_SHARED, frame, 0);
-	if (screenBuffer == MAP_FAILED){
-		return EXIT_FAILURE;
-	}
-
 	return 0;
 }
 
-void update_screen(){
-	/*
-	 * 320 pixler per linje
-	 * x0 = 110
-	 * y0 = 20
-	 *
-	 * Move:
-	 * Finne kordinat på brikke
-	 * update 7x7 matrise
-	 *
-	 * clear_lines:
-	 * update hele brettet
-	 * x = [110, 210], y = [20, 220]
-	 *
-	 * */
-	 int i;
-	 int j;
-	 int y;
-	 int x;
+void update_screen(){	
+	int y;
+	int x;
+	for(y = 0; y < 24; y++) {
+		for(x = 0; x < 10; x++) {
+			if(BOARD[y][x] == 1) {
+				update_pixels(x, y, 0x04ff);
+			}
+			else if(BOARD[i][j] == 0){
+				update_pixels(x, y, 0x0);
+			}
+		}
+	}
+	 
+}
 
-	 for(i = 0; i < 320*240; i++) {
-		 screenBuffer[i] = 0x0;
-	 }
-	 for(i = 0; i < 24; i++) {
-		 for(j = 0; j < 10; j++) {
-			 if(BOARD[i][j] == 1) {
-				 for(y = i * 10 + 20; y < i * 10 + 20 + 10; y++) {
-					 for(x = j * 10 + 50; x < j * 10 + 50 + 10; y++) {
-						 screenBuffer[y * 320 + x] = 0xF;
-					 }
-				 }
-			 }
-		 }
-	 }
-	 rect.dx = 240;
-	 rect.dy = 320;
-
-	 ioctl(frame, 0x4680, &rect);
+void update_pixels(int x, int y, int val){
+	int i;
+	int j;
+	
+	area.width = 10;
+	area.height = 10;
+	
+	int ystart = y*320*10;
+	int xstart = x*10 + 110;
+	int start = ystart + xstart;
+	for(i=0; i<10; i++) { //Height
+		for(j=0; j<10; j++){ //Width
+			screenBuffer[start + i*320  + j] = val;
+		}
+	}
+	
+	area.dx = x*10+110;
+	area.dy = y*10;
+	
+	ioctl(frame, 0x4680, &area);
 }
 
 void clean_screen(){
-	munmap(screenBuffer, sizeof(screenBuffer)); //fbp -> screen
-	close(frame);
+	/*munmap(screenBuffer, sizeof(screenBuffer)); //fbp -> screen
+	close(frame);*/
 }

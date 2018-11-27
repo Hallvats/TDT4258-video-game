@@ -351,10 +351,7 @@ static irqreturn_t gp_interrupt_handler(int irq, void *dev_id, struct pt_regs *r
 	iowrite32(clear_value, gpio_start + GPIO_IFC);
 	
 	/* When data arrives, the following statement must be executed to signal asynchronous readers */
-	if (gamepad_async_queue) {
-		kill_fasync(&gamepad_async_queue, SIGIO, POLL_IN);
-	}
-	
+	kill_fasync(&gamepad_async_queue, SIGIO, POLL_IN);
 	return IRQ_HANDLED;
 }
 
@@ -365,4 +362,3 @@ module_exit(gamepad_cleanup);
 /* Licence */
 MODULE_DESCRIPTION("Gamepad module.");
 MODULE_LICENSE("GPL");
-
